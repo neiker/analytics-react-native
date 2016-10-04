@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/neiker/analytics-react-native.svg?branch=feature%2Ftravis)](https://travis-ci.org/neiker/analytics-react-native)
+[![Build Status](https://travis-ci.org/neiker/analytics-react-native.svg)](https://travis-ci.org/neiker/analytics-react-native) ![dependencies](https://david-dm.org/neiker/analytics-react-native.svg)
 
 A React Native client for [Segment](https://segment.com). The hassle-free way to integrate analytics into any application.
 
