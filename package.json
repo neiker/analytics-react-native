@@ -1,0 +1,81 @@
+{
+  "name": "analytics-react-native",
+  "version": "1.0.0",
+  "description": "A React Native client for [Segment](https://segment.com) — The hassle-free way to integrate analytics into any application.",
+  "keywords": [
+    "analytics",
+    "segment.io",
+    "segmentio",
+    "client",
+    "driver",
+    "react-native"
+  ],
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "NODE_ENV='test' mocha 'test/index.js' --compilers js:babel-core/register --require mocha_setup.js",
+    "cover": "NODE_ENV='test' nyc npm test",
+    "lint": "eslint src/",
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neiker/analytics-react-native.git"
+  },
+  "author": "Javier Alvarez <neiker@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/neiker/analytics-react-native",
+  "bugs": {
+    "url": "https://github.com/neiker/analytics-react-native/issues"
+  },
+  "dependencies": {
+    "assert": "1.4.1",
+    "base-64": "0.1.0",
+    "type-of": "2.0.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.16.0",
+    "babel-eslint": "7.0.0",
+    "babel-plugin-inline-package-json": "2.0.0",
+    "babel-plugin-istanbul": "2.0.1",
+    "babel-polyfill": "6.16.0",
+    "babel-preset-react-native": "1.9.0",
+    "babel-register": "6.16.3",
+    "body-parser": "1.15.2",
+    "eslint": "3.7.0",
+    "eslint-config-airbnb-base": "8.0.0",
+    "eslint-plugin-import": "2.0.0",
+    "express": "4.14.0",
+    "mocha": "3.1.0",
+    "node-fetch": "1.6.3",
+    "nyc": "8.3.0",
+    "pre-git": "3.10.0"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.js"
+    ],
+    "require": [
+      "babel-register"
+    ],
+    "reporter": [
+      "lcov",
+      "text",
+      "html"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
+  "config": {
+    "pre-git": {
+      "pre-commit": [
+        "npm run lint"
+      ],
+      "pre-push": [
+        "npm run test"
+      ],
+      "post-checkout": "npm i",
+      "post-merge": "npm i"
+    }
+  }
+}

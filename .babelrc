@@ -1,0 +1,11 @@
+{
+  "presets": ["react-native"],
+  "plugins": ["inline-package-json"],
+  "env": {
+    "test": {
+      "plugins": [
+        "istanbul"
+      ]
+    }
+  }
+}
