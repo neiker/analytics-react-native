@@ -1,0 +1,20 @@
+engines:
+  fixme:
+    enabled: true
+  duplication:
+    enabled: true
+    checks:
+      Similar code:
+        enabled: false
+    config:
+      languages:
+      - javascript
+  eslint:
+    enabled: true
+    channel: "eslint-2"
+
+ratings:
+  paths:
+    - "**.js"
+exclude_paths:
+  - "test/**/*.js"
