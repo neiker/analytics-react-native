@@ -1,6 +1,6 @@
-A React Native client for [Segment](https://segment.com) — The hassle-free way to integrate analytics into any application.
+A React Native client for [Segment](https://segment.com). The hassle-free way to integrate analytics into any application.
 
-This library is based on its node counterpart, [analytics-node](https://github.com/segmentio/analytics-node), and despite being designed to run on react-native, also will work in browsers and even nodejs, you only need to include [fetch](https://github.com/github/fetch) for browsers or [node-fetch](https://github.com/bitinn/node-fetch) for nodejs or io.js.
+This library is based on its node counterpart, [analytics-node](https://github.com/segmentio/analytics-node). Despite being designed to run on react-native, it will also work in browsers (via webpack or browserify) and even in nodejs. You only need to include [fetch](https://github.com/github/fetch) for browsers or [node-fetch](https://github.com/bitinn/node-fetch) for nodejs or io.js.
 
 ## Installation
 
