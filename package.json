@@ -12,8 +12,11 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "test": "NODE_ENV='test' mocha 'test/index.js' --compilers js:babel-core/register --require mocha_setup.js",
-    "cover": "NODE_ENV='test' nyc npm test",
+    "test": "NODE_ENV=test mocha 'test/index.js' --compilers js:babel-core/register --require mocha_setup.js",
+    "test:watch": "npm run test -- --watch",
+    "coverage": "nyc npm test",
+    "coverage:html": "npm run coverage && open ./coverage/index.html",
+    "coverage:publish": "npm run coverage && cat ./coverage/lcov.info | codecov",
     "lint": "eslint src/",
     "compile": "babel -d lib/ src/",
     "prepublish": "npm run compile"
@@ -42,6 +45,7 @@
     "babel-preset-react-native": "1.9.0",
     "babel-register": "6.16.3",
     "body-parser": "1.15.2",
+    "codecov": "1.0.1",
     "eslint": "3.7.1",
     "eslint-config-airbnb-base": "8.0.0",
     "eslint-plugin-import": "2.0.0",
