@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/neiker/analytics-react-native.svg)](https://travis-ci.org/neiker/analytics-react-native) ![dependencies](https://david-dm.org/neiker/analytics-react-native.svg)
+[![Build Status](https://travis-ci.org/neiker/analytics-react-native.svg)](https://travis-ci.org/neiker/analytics-react-native) ![dependencies](https://david-dm.org/neiker/analytics-react-native.svg) [![Code Climate](https://codeclimate.com/github/neiker/analytics-react-native/badges/gpa.svg)](https://codeclimate.com/github/neiker/analytics-react-native)
 
 A React Native client for [Segment](https://segment.com). The hassle-free way to integrate analytics into any application.
 
