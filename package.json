@@ -40,7 +40,7 @@
     "babel-cli": "6.16.0",
     "babel-eslint": "7.0.0",
     "babel-plugin-inline-package-json": "2.0.0",
-    "babel-plugin-istanbul": "2.0.1",
+    "babel-plugin-istanbul": "2.0.3",
     "babel-polyfill": "6.16.0",
     "babel-preset-react-native": "1.9.0",
     "babel-register": "6.16.3",
