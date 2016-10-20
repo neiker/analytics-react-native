@@ -10,7 +10,7 @@ export default function fetchRetry(url, options) {
       fetch(url, options)
         .then(resolve)
         .catch((error) => {
-          if (!retries > 0) {
+          if (!retries) {
             reject(error);
           } else {
             setTimeout(() => {
