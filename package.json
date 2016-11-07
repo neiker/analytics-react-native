@@ -48,7 +48,7 @@
     "codecov": "1.0.1",
     "eslint": "3.9.1",
     "eslint-config-airbnb-base": "9.0.0",
-    "eslint-plugin-import": "2.0.1",
+    "eslint-plugin-import": "2.2.0",
     "express": "4.14.0",
     "mocha": "3.1.2",
     "node-fetch": "1.6.3",
