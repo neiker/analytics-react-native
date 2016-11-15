@@ -57,7 +57,7 @@ const rules = [
 export default function validate(obj) {
   assert(
     typeOf(obj) === 'object',
-    'You must pass a message object.'
+    'You must pass a message object.',
   );
 
   rules.forEach((rule) => {
@@ -66,7 +66,7 @@ export default function validate(obj) {
 
       assert(
         types.some(type => typeOf(obj[rule.name]) === type),
-        `"${rule.name}" must be ${types.join(' or ')}.`
+        `"${rule.name}" must be ${types.join(' or ')}.`,
       );
     }
   });
