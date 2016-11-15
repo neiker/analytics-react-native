@@ -35,11 +35,11 @@ export default class Analytics {
       host = Analytics.DEFAULT_HOST,
       flushAt = Analytics.DEFAULT_FLUSH_AT,
       flushAfter = Analytics.DEFAULT_FLUSH_AFTER,
-    } = {}
+    } = {},
   ) {
     assert(
       writeKey,
-      'You must pass your Segment project\'s write key.'
+      'You must pass your Segment project\'s write key.',
     );
 
     this.queue = [];
@@ -63,7 +63,7 @@ export default class Analytics {
 
     assert(
       message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.'
+      'You must pass either an `anonymousId` or a `userId`.',
     );
 
     this.enqueue('identify', message, fn);
@@ -84,11 +84,11 @@ export default class Analytics {
 
     assert(
       message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.'
+      'You must pass either an `anonymousId` or a `userId`.',
     );
     assert(
       message.groupId,
-      'You must pass a `groupId`.'
+      'You must pass a `groupId`.',
     );
 
     this.enqueue('group', message, fn);
@@ -108,11 +108,11 @@ export default class Analytics {
 
     assert(
       message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.'
+      'You must pass either an `anonymousId` or a `userId`.',
     );
     assert(
       message.event,
-      'You must pass an `event`.'
+      'You must pass an `event`.',
     );
 
     this.enqueue('track', message, fn);
@@ -132,7 +132,7 @@ export default class Analytics {
 
     assert(
       message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.'
+      'You must pass either an `anonymousId` or a `userId`.',
     );
 
     this.enqueue('page', message, fn);
@@ -152,11 +152,11 @@ export default class Analytics {
 
     assert(
       message.userId,
-      'You must pass a `userId`.'
+      'You must pass a `userId`.',
     );
     assert(
       message.previousId,
-      'You must pass a `previousId`.'
+      'You must pass a `previousId`.',
     );
 
     this.enqueue('alias', message, fn);
@@ -200,7 +200,7 @@ export default class Analytics {
           'X-Requested-With': 'XMLHttpRequest',
         },
         retries: 5,
-      }
+      },
     )
     .then(parseResponse)
     .then(() => {

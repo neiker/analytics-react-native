@@ -3,6 +3,6 @@ export const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
 export default function uid(length) {
   return Array.from(Array(length)).reduce(
     res => res + chars[Math.floor((Math.random()) * chars.length)],
-    ''
+    '',
   );
 }
