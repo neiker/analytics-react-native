@@ -53,7 +53,7 @@
     "mocha": "3.1.2",
     "node-fetch": "1.6.3",
     "nyc": "9.0.1",
-    "pre-git": "3.11.0"
+    "pre-git": "3.11.1"
   },
   "nyc": {
     "include": [
@@ -72,7 +72,6 @@
   },
   "config": {
     "pre-git": {
-      "enabled": true,
       "pre-commit": [
         "npm run lint"
       ],
