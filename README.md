@@ -10,7 +10,45 @@ This library is based on its node counterpart, [analytics-node](https://github.c
 ## Installation
 
 ```bash
-$ npm install analytics-react-native
+npm install analytics-react-native
+```
+
+## Usage
+
+```javascript
+import Analytics from analytics-react-native;
+
+const analytics = new Analytics(YOUR_WRITE_KEY);
+
+analytics.identify({
+  userId: user.id,
+  traits: {
+    name: 'John',
+    lastname: 'Doe',
+    email: 'user@domain.com',
+    plan: 'Enterprise',
+  }
+);
+
+analytics.track({
+  userId: user.id,
+  event: 'Item Purchased',
+  properties: {
+    revenue: 39.95,
+    shippingMethod: '2-day'
+  }
+});
+```
+
+### Configuration
+The second argument to the Analytics constructor is an optional object to configure the module.
+
+```javascript
+const analytics = new Analytics(YOUR_WRITE_KEY, {
+  host: 'http://localhost/', // Host where reports will be send. Useful for debug.
+  flushAt: 20, // The number of messages to enqueue before flushing.
+  flushAfter: 10000 // The number of milliseconds to wait before flushing the queue automatically.
+});
 ```
 
 ## Documentation
