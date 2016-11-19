@@ -10,7 +10,7 @@ This library is based on [analytics-node](https://github.com/segmentio/analytics
 ## Installation
 
 ```bash
-npm install analytics-universal babel config
+npm install analytics-universal
 ```
 
 ## Usage
