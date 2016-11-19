@@ -72,7 +72,6 @@
   },
   "config": {
     "pre-git": {
-      "enabled": true,
       "pre-commit": [
         "npm run lint"
       ],

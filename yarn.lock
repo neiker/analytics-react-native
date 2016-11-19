@@ -2638,9 +2638,9 @@ pop-iterate@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pop-iterate/-/pop-iterate-1.0.1.tgz#ceacfdab4abf353d7a0f2aaa2c1fc7b3f9413ba3"
 
-pre-git@3.11.0:
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/pre-git/-/pre-git-3.11.0.tgz#41fbcff7d66498e9eb0e8cf7b351872bc31e57d3"
+pre-git@3.11.1:
+  version "3.11.1"
+  resolved "https://registry.yarnpkg.com/pre-git/-/pre-git-3.11.1.tgz#79e65963e7b1ec4afe8768b6645210f73ad1fef3"
   dependencies:
     bluebird "3.3.4"
     chalk "1.1.3"
