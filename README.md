@@ -3,14 +3,14 @@
 
 ![dependencies](https://david-dm.org/neiker/analytics-react-native.svg)
 
-A React Native client for [Segment](https://segment.com). The hassle-free way to integrate analytics into any application.
+A universal javascript client for [Segment](https://segment.com).
 
-This library is based on its node counterpart, [analytics-node](https://github.com/segmentio/analytics-node). Despite being designed to run on react-native, it will also work in browsers (via webpack or browserify) and even in nodejs. You only need to include [fetch](https://github.com/github/fetch) for browsers or [node-fetch](https://github.com/bitinn/node-fetch) for nodejs or io.js.
+This library is based on [analytics-node](https://github.com/segmentio/analytics-node) and have the same API, but is re writed to also work in browsers (via webpack or browserify) server side, React Native and NativeScript. You only need to include [fetch](https://github.com/github/fetch) for browsers (check [here](http://caniuse.com/#feat=fetch) if you really need it) or [node-fetch](https://github.com/bitinn/node-fetch) for nodejs or io.js.
 
 ## Installation
 
 ```bash
-npm install analytics-react-native
+npm install analytics-universal babel config
 ```
 
 ## Usage

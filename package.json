@@ -1,14 +1,15 @@
 {
-  "name": "analytics-react-native",
-  "version": "1.0.1",
-  "description": "A React Native client for [Segment](https://segment.com) — The hassle-free way to integrate analytics into any application.",
+  "name": "analytics-universal",
+  "version": "1.1.0",
+  "description": "An universal client for [Segment](https://segment.com). Works in browsers, React Native, NativeScript or nodejs",
   "keywords": [
     "analytics",
     "segment.io",
     "segmentio",
     "client",
     "driver",
-    "react-native"
+    "react-native",
+    "node"
   ],
   "main": "lib/index.js",
   "scripts": {
@@ -23,13 +24,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/neiker/analytics-react-native.git"
+    "url": "https://github.com/neiker/analytics-universal.git"
   },
   "author": "Javier Alvarez <neiker@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/neiker/analytics-react-native",
+  "homepage": "https://github.com/neiker/analytics-universal",
   "bugs": {
-    "url": "https://github.com/neiker/analytics-react-native/issues"
+    "url": "https://github.com/neiker/analytics-universal/issues"
   },
   "dependencies": {
     "base-64": "0.1.0",
