@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/neiker/analytics-react-native.svg)](https://travis-ci.org/neiker/analytics-react-native) [![Code Climate](https://codeclimate.com/github/neiker/analytics-react-native/badges/gpa.svg)](https://codeclimate.com/github/neiker/analytics-react-native)
-[![codecov.io](http://codecov.io/github/neiker/analytics-react-native/coverage.svg?branch=master)](http://codecov.io/github/neiker/analytics-react-native?branch=master)
+[![Build Status](https://travis-ci.org/neiker/analytics-universal.svg)](https://travis-ci.org/neiker/analytics-universal) [![Code Climate](https://codeclimate.com/github/neiker/analytics-universal/badges/gpa.svg)](https://codeclimate.com/github/neiker/analytics-universal)
+[![codecov.io](http://codecov.io/github/neiker/analytics-universal/coverage.svg?branch=master)](http://codecov.io/github/neiker/analytics-universal?branch=master)
 
-![dependencies](https://david-dm.org/neiker/analytics-react-native.svg)
+![dependencies](https://david-dm.org/neiker/analytics-universal.svg)
 
 A universal javascript client for [Segment](https://segment.com).
 
@@ -16,7 +16,7 @@ npm install analytics-universal babel config
 ## Usage
 
 ```javascript
-import Analytics from 'analytics-react-native';
+import Analytics from 'analytics-universal';
 
 const analytics = new Analytics(YOUR_WRITE_KEY);
 
