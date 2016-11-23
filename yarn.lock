@@ -1010,6 +1010,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+debug-log@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/debug-log/-/debug-log-1.0.1.tgz#2307632d4c04382b8df8a32f70b895046d52745f"
+
 debug@^2.1.1, debug@^2.2.0:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.2.tgz#94cb466ef7d6d2c7e5245cdd6e4104f2d0d70d30"
@@ -2447,14 +2451,15 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
-nyc@9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/nyc/-/nyc-9.0.1.tgz#82775ed5c7f2734595a2c5e7c64f5d7199904db0"
+nyc@10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/nyc/-/nyc-10.0.0.tgz#95bd4a2c3487f33e1e78f213c6d5a53d88074ce6"
   dependencies:
     archy "^1.0.0"
     arrify "^1.0.1"
     caching-transform "^1.0.0"
     convert-source-map "^1.3.0"
+    debug-log "^1.0.1"
     default-require-extensions "^1.0.0"
     find-cache-dir "^0.1.1"
     find-up "^1.1.2"
@@ -2474,7 +2479,7 @@ nyc@9.0.1:
     rimraf "^2.5.4"
     signal-exit "^3.0.1"
     spawn-wrap "^1.2.4"
-    test-exclude "^3.2.2"
+    test-exclude "^3.3.0"
     yargs "^6.4.0"
     yargs-parser "^4.0.2"
 
@@ -3240,6 +3245,16 @@ temp@~0.5.1:
 test-exclude@^3.2.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-3.2.2.tgz#bce1e739b668c00d71f6cd2c0ef292b8d23c22ae"
+  dependencies:
+    arrify "^1.0.1"
+    micromatch "^2.3.11"
+    object-assign "^4.1.0"
+    read-pkg-up "^1.0.1"
+    require-main-filename "^1.0.1"
+
+test-exclude@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/test-exclude/-/test-exclude-3.3.0.tgz#7a17ca1239988c98367b0621456dbb7d4bc38977"
   dependencies:
     arrify "^1.0.1"
     micromatch "^2.3.11"
