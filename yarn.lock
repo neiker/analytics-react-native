@@ -681,6 +681,10 @@ bluebird@3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.3.4.tgz#f780fe43e1a7a6510f67abd7d0d79533a40ddde6"
 
+bluebird@3.4.6:
+  version "3.4.6"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.4.6.tgz#01da8d821d87813d158967e743d5fe6c62cf8c0f"
+
 body-parser@1.15.2:
   version "1.15.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.15.2.tgz#d7578cf4f1d11d5f6ea804cef35dc7a7ff6dae67"
@@ -805,6 +809,10 @@ check-more-types@2.15.0:
 check-more-types@2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/check-more-types/-/check-more-types-2.2.0.tgz#f5e2af8345d0aae617c4e3446e65fa353c7f46bb"
+
+check-more-types@2.23.0:
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/check-more-types/-/check-more-types-2.23.0.tgz#6226264d30b1095aa1c0a5b874edbdd5d2d0a66f"
 
 check-more-types@2.3.0:
   version "2.3.0"
@@ -1025,6 +1033,12 @@ debug@~2.2.0, debug@2.2.0:
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
     ms "0.7.1"
+
+debug@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
+  dependencies:
+    ms "0.7.2"
 
 decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
@@ -1569,21 +1583,22 @@ ggit@1.10.0:
     quote "0.4.0"
     ramda "0.9.1"
 
-ggit@1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/ggit/-/ggit-1.7.1.tgz#c6b5531ff08a3a4fb3a8cf51c16b011026d77632"
+ggit@1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/ggit/-/ggit-1.12.0.tgz#b4f65b9df44baa7625d50c8c9ae45553f4fe1c2d"
   dependencies:
+    bluebird "3.4.6"
     chdir-promise "0.2.1"
-    check-more-types "2.2.0"
+    check-more-types "2.23.0"
     cli-table "0.3.1"
     colors "1.1.2"
     commander "2.9.0"
     d3-helpers "0.3.0"
-    debug "2.2.0"
-    glob "6.0.1"
-    lazy-ass "1.1.0"
+    debug "2.3.3"
+    glob "7.1.1"
+    lazy-ass "1.5.0"
     lodash "3.10.1"
-    moment "2.10.6"
+    moment "2.17.0"
     optimist "0.6.1"
     q "2.0.3"
     quote "0.4.0"
@@ -1612,7 +1627,7 @@ glob@^5.0.5:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.0.6:
+glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.0.6, glob@7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
   dependencies:
@@ -2149,6 +2164,10 @@ lazy-ass@1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/lazy-ass/-/lazy-ass-1.4.0.tgz#c4acfd59d65b9e6f25b05c439cb2f8fc2be34437"
 
+lazy-ass@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/lazy-ass/-/lazy-ass-1.5.0.tgz#ca15be243c7c475b8565cdbfa0f9c2f374f2a01d"
+
 lazy-cache@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
@@ -2362,13 +2381,13 @@ mocha@3.2.0:
     mkdirp "0.5.1"
     supports-color "3.1.2"
 
-moment@2.10.6:
-  version "2.10.6"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.10.6.tgz#6cb21967c79cba7b0ca5e66644f173662b3efa77"
-
 moment@2.12.0:
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.12.0.tgz#dc2560d19838d6c0731b1a6afa04675264d360d6"
+
+moment@2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.0.tgz#a4c292e02aac5ddefb29a6eed24f51938dd3b74f"
 
 ms@0.7.1:
   version "0.7.1"
@@ -2647,9 +2666,9 @@ pop-iterate@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/pop-iterate/-/pop-iterate-1.0.1.tgz#ceacfdab4abf353d7a0f2aaa2c1fc7b3f9413ba3"
 
-pre-git@3.11.1:
-  version "3.11.1"
-  resolved "https://registry.yarnpkg.com/pre-git/-/pre-git-3.11.1.tgz#79e65963e7b1ec4afe8768b6645210f73ad1fef3"
+pre-git@3.12.0:
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/pre-git/-/pre-git-3.12.0.tgz#8291899a15ba86f9cdaa8ca180e47096deff8dc3"
   dependencies:
     bluebird "3.3.4"
     chalk "1.1.3"
@@ -2662,7 +2681,7 @@ pre-git@3.11.1:
     lazy-ass "1.4.0"
     require-relative "0.8.7"
     shelljs "0.6.0"
-    simple-commit-message "2.1.1"
+    simple-commit-message "2.2.1"
     validate-commit-msg "2.5.0"
     word-wrap "1.1.0"
 
@@ -3050,16 +3069,16 @@ signal-exit@^3.0.0, signal-exit@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.1.tgz#5a4c884992b63a7acd9badb7894c3ee9cfccad81"
 
-simple-commit-message@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/simple-commit-message/-/simple-commit-message-2.1.1.tgz#bf365812160222439cb7308b488fa870cf087d15"
+simple-commit-message@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/simple-commit-message/-/simple-commit-message-2.2.1.tgz#672cc734ea4a880aba2b380d1f7b0d83afd901bb"
   dependencies:
     check-more-types "2.10.0"
-    ggit "1.7.1"
+    ggit "1.12.0"
     hr "0.1.3"
     inquirer "0.11.1"
     inquirer-confirm "0.2.2"
-    lazy-ass "1.3.0"
+    lazy-ass "1.5.0"
     semver "5.1.0"
     word-wrap "1.1.0"
 
