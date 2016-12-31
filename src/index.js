@@ -185,7 +185,6 @@ export default class Analytics {
 
     const data = {
       batch,
-      timestamp: new Date(),
       sentAt: new Date(),
     };
 
