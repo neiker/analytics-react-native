@@ -44,7 +44,7 @@
     "babel-polyfill": "6.20.0",
     "babel-preset-react-native": "1.9.0",
     "babel-register": "6.18.0",
-    "body-parser": "1.15.2",
+    "body-parser": "1.16.0",
     "codecov": "1.0.1",
     "eslint": "3.14.0",
     "eslint-config-airbnb-base": "11.0.0",
