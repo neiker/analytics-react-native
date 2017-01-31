@@ -28,7 +28,7 @@ analytics.identify({
     email: 'user@domain.com',
     plan: 'Enterprise',
   }
-);
+});
 
 analytics.track({
   userId: user.id,
