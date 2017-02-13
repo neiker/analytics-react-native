@@ -16,7 +16,7 @@ npm install analytics-react-native
 ## Usage
 
 ```javascript
-import Analytics from analytics-react-native;
+import Analytics from 'analytics-react-native';
 
 const analytics = new Analytics(YOUR_WRITE_KEY);
 
