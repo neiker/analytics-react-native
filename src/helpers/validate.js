@@ -1,5 +1,5 @@
-import assert from 'assert';
 import typeOf from 'type-of';
+import assert from './assert';
 
 /**
  * Validation rules.
