@@ -1,6 +1,10 @@
 {
-  "presets": ["react-native"],
-  "plugins": ["inline-package-json"],
+  "presets": ["es2015"],
+  "plugins": [
+    "inline-package-json",
+    "transform-class-properties",
+    "transform-object-rest-spread"
+ ],
   "env": {
     "test": {
       "plugins": [
