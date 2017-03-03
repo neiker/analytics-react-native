@@ -253,7 +253,7 @@ export default class Analytics {
     message.type = messageType;
     message.context = message.context ? { ...message.context } : {};
     message.context.library = {
-      name: 'analytics-react-native',
+      name: 'analytics-universal',
       version: VERSION,
     };
 
@@ -262,7 +262,7 @@ export default class Analytics {
     }
 
     if (!message.messageId) {
-      message.messageId = `react-native-${uid(32)}`;
+      message.messageId = `universal-${uid(32)}`;
     }
 
     this.queue.push({

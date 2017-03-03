@@ -10,7 +10,7 @@ const noop = function noop() {};
 const id = 'id';
 const context = {
   library: {
-    name: 'analytics-react-native',
+    name: 'analytics-universal',
     version,
   },
 };
@@ -142,7 +142,7 @@ describe('Analytics', () => {
       analytics.enqueue('type', { event: 'test', context: { name: 'travis' } }, noop);
       assert.deepEqual(analytics.queue[0].message.context, {
         library: {
-          name: 'analytics-react-native',
+          name: 'analytics-universal',
           version,
         },
         name: 'travis',
@@ -154,7 +154,7 @@ describe('Analytics', () => {
 
       const msg = analytics.queue[0].message;
       assert(msg.messageId);
-      assert(/react-native-[a-zA-Z0-9]{32}/.test(msg.messageId));
+      assert(/universal-[a-zA-Z0-9]{32}/.test(msg.messageId));
     });
 
     it('shouldn\'t change the message id', () => {

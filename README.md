@@ -1,22 +1,22 @@
-[![Build Status](https://travis-ci.org/neiker/analytics-react-native.svg)](https://travis-ci.org/neiker/analytics-react-native) [![Code Climate](https://codeclimate.com/github/neiker/analytics-react-native/badges/gpa.svg)](https://codeclimate.com/github/neiker/analytics-react-native)
-[![codecov.io](http://codecov.io/github/neiker/analytics-react-native/coverage.svg?branch=master)](http://codecov.io/github/neiker/analytics-react-native?branch=master)
+[![Build Status](https://travis-ci.org/neiker/analytics-universal.svg)](https://travis-ci.org/neiker/analytics-universal) [![Code Climate](https://codeclimate.com/github/neiker/analytics-universal/badges/gpa.svg)](https://codeclimate.com/github/neiker/analytics-universal)
+[![codecov.io](http://codecov.io/github/neiker/analytics-universal/coverage.svg?branch=master)](http://codecov.io/github/neiker/analytics-universal?branch=master)
 
-![dependencies](https://david-dm.org/neiker/analytics-react-native.svg)
+![dependencies](https://david-dm.org/neiker/analytics-universal.svg)
 
-A React Native client for [Segment](https://segment.com). The hassle-free way to integrate analytics into any application.
+A universal javascript client for [Segment](https://segment.com).
 
-This library is based on its node counterpart, [analytics-node](https://github.com/segmentio/analytics-node). Despite being designed to run on react-native, it will also work in browsers (via webpack or browserify) and even in nodejs. You only need to include [fetch](https://github.com/github/fetch) for browsers or [node-fetch](https://github.com/bitinn/node-fetch) for nodejs or io.js.
+This library is based on [analytics-node](https://github.com/segmentio/analytics-node) and have the same API, but is re writed to also work in browsers (via webpack or browserify) server side, React Native and NativeScript. You only need to include [fetch](https://github.com/github/fetch) for browsers (check [here](http://caniuse.com/#feat=fetch) if you really need it) or [node-fetch](https://github.com/bitinn/node-fetch) for nodejs or io.js.
 
 ## Installation
 
 ```bash
-npm install analytics-react-native
+npm install analytics-universal
 ```
 
 ## Usage
 
 ```javascript
-import Analytics from 'analytics-react-native';
+import Analytics from 'analytics-universal';
 
 const analytics = new Analytics(YOUR_WRITE_KEY);
 
