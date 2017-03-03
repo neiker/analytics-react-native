@@ -1,6 +1,6 @@
-import assert from 'assert';
 import base64 from 'base-64';
 
+import assert from './helpers/assert';
 import validate from './helpers/validate';
 import fetchRetry from './helpers/fetch-retry';
 import uid from './helpers/uid';

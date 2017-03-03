@@ -32,7 +32,6 @@
     "url": "https://github.com/neiker/analytics-react-native/issues"
   },
   "dependencies": {
-    "assert": "1.4.1",
     "base-64": "0.1.0",
     "type-of": "2.0.1"
   },
