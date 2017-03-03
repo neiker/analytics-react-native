@@ -140,6 +140,26 @@ export default class Analytics {
   }
 
   /**
+   * Send a screen `message`.
+   *
+   * @param {Object} message
+   * @param {Function} fn (optional)
+   * @return {Analytics}
+   */
+
+  screen(message, fn) {
+    validate(message);
+
+    assert(
+      message.anonymousId || message.userId,
+      'You must pass either an `anonymousId` or a `userId`.',
+    );
+
+    this.enqueue('screen', message, fn);
+    return this;
+  }
+
+  /**
    * Send an alias `message`.
    *
    * @param {Object} message
