@@ -53,7 +53,7 @@
     "mocha": "3.2.0",
     "node-fetch": "1.6.3",
     "nyc": "10.1.2",
-    "pre-git": "3.13.0"
+    "pre-git": "3.14.0"
   },
   "nyc": {
     "include": [
