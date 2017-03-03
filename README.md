@@ -54,3 +54,24 @@ const analytics = new Analytics(YOUR_WRITE_KEY, {
 ## Documentation
 
 Documentation is available at [https://segment.com/libraries/node](https://segment.com/libraries/node).
+
+## Differences from analytics-node
+
+### Screen method
+In addition to methods available in [analytics-node](https://github.com/segmentio/analytics-node), documented above, screen method is available. The screen method lets you you record whenever a user sees a screen of your mobile app, along with optional extra information about the page being viewed.
+
+You’ll want to record a screen event an event whenever the user opens a screen in your app. This could be a view, fragment, dialog or activity depending on your app.
+
+You can call it using exactly the same params as [page method](https://segment.com/docs/sources/server/node/#page).
+
+```javascript
+analytics.screen({
+  userId: 'john_doe',
+  name: 'products_list',
+  properties: {
+    order: 'ASC',
+    page: 2,
+    // And any other data about this screen
+  }
+});
+```
