@@ -2,13 +2,15 @@ engines:
   fixme:
     enabled: true
   duplication:
-    enabled: true
-    config:
-      languages:
-      - javascript
+    enabled: false
   eslint:
     enabled: true
-    channel: "eslint-2"
+    channel: "eslint-3"
+    checks:
+      import/no-unresolved:
+        enabled: false
+      import/extensions:
+        enabled: false
 
 ratings:
   paths:
