@@ -182,7 +182,6 @@ describe('Analytics', () => {
         }
 
         assert.deepEqual(data.batch, [1, 2]);
-        assert(data.timestamp instanceof Date);
         assert(data.sentAt instanceof Date);
 
         return done();
