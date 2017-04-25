@@ -39,7 +39,7 @@
     "babel-cli": "6.24.x",
     "babel-eslint": "7.2.x",
     "babel-plugin-inline-package-json": "2.0.x",
-    "babel-plugin-istanbul": "4.1.x",
+    "babel-plugin-istanbul": "4.1.1",
     "babel-plugin-transform-class-properties": "6.24.x",
     "babel-plugin-transform-object-rest-spread": "6.23.x",
     "babel-polyfill": "6.23.x",
