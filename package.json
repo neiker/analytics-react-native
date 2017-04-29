@@ -53,7 +53,7 @@
     "express": "4.15.x",
     "mocha": "3.2.x",
     "node-fetch": "1.6.x",
-    "nyc": "10.2.x",
+    "nyc": "10.3.0",
     "pre-git": "3.14.x"
   },
   "nyc": {
