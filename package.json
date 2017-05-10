@@ -46,7 +46,7 @@
     "babel-preset-es2015": "6.24.x",
     "babel-register": "6.24.x",
     "body-parser": "1.17.x",
-    "codecov": "2.1.x",
+    "codecov": "2.2.0",
     "eslint": "3.19.x",
     "eslint-config-airbnb-base": "11.1.x",
     "eslint-plugin-import": "2.2.x",
