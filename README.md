@@ -2,14 +2,13 @@
 [![codecov.io](http://codecov.io/github/neiker/analytics-react-native/coverage.svg?branch=master)](http://codecov.io/github/neiker/analytics-react-native?branch=master)
 
 ![dependencies](https://david-dm.org/neiker/analytics-react-native.svg)
+[![Greenkeeper badge](https://badges.greenkeeper.io/neiker/analytics-react-native.svg)](https://greenkeeper.io/)
 
 A React Native client for [Segment](https://segment.com). The hassle-free way to integrate analytics into any application.
 
 This library is based on its node counterpart, [analytics-node](https://github.com/segmentio/analytics-node). Despite being designed to run on react-native, it will also work in browsers (via webpack or browserify) and even in nodejs. You only need to include [fetch](https://github.com/github/fetch) for browsers or [node-fetch](https://github.com/bitinn/node-fetch) for nodejs or io.js.
 
 ## Installation
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/neiker/analytics-react-native.svg)](https://greenkeeper.io/)
 
 ```bash
 npm install analytics-react-native
