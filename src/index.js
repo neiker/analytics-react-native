@@ -220,19 +220,18 @@ export default class Analytics {
           'X-Requested-With': 'XMLHttpRequest',
         },
         retries: 5,
-      },
-    )
-    .then(parseResponse)
-    .then(() => {
-      fns.forEach((fn) => {
-        fn(undefined, data);
+      })
+      .then(parseResponse)
+      .then(() => {
+        fns.forEach((fn) => {
+          fn(undefined, data);
+        });
+      })
+      .catch((error) => {
+        fns.forEach((fn) => {
+          fn(error);
+        });
       });
-    })
-    .catch((error) => {
-      fns.forEach((fn) => {
-        fn(error);
-      });
-    });
 
     return true;
   }

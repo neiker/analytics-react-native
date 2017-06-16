@@ -2,6 +2,7 @@
 [![codecov.io](http://codecov.io/github/neiker/analytics-react-native/coverage.svg?branch=master)](http://codecov.io/github/neiker/analytics-react-native?branch=master)
 
 ![dependencies](https://david-dm.org/neiker/analytics-react-native.svg)
+[![Greenkeeper badge](https://badges.greenkeeper.io/neiker/analytics-react-native.svg)](https://greenkeeper.io/)
 
 A React Native client for [Segment](https://segment.com). The hassle-free way to integrate analytics into any application.
 
