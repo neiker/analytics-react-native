@@ -9,6 +9,8 @@ This library is based on its node counterpart, [analytics-node](https://github.c
 
 ## Installation
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/neiker/analytics-react-native.svg)](https://greenkeeper.io/)
+
 ```bash
 npm install analytics-react-native
 ```
