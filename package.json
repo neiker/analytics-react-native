@@ -51,7 +51,7 @@
     "eslint-config-airbnb-base": "11.2.0",
     "eslint-plugin-import": "2.3.0",
     "express": "4.15.0",
-    "mocha": "3.4.2",
+    "mocha": "3.5.0",
     "node-fetch": "1.7.1",
     "nyc": "11.0.2",
     "pre-git": "3.15.0"
