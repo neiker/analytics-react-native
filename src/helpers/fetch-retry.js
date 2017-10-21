@@ -1,10 +1,6 @@
-export default function fetchRetry(url, options) {
+export default function fetchRetry(url, options = {}) {
   return new Promise((resolve, reject) => {
-    let retries = 3;
-
-    if (options && options.retries) {
-      retries = options.retries;
-    }
+    let { retries = 3 } = options;
 
     const wrappedFetch = () => {
       fetch(url, options)
