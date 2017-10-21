@@ -220,7 +220,8 @@ export default class Analytics {
           'X-Requested-With': 'XMLHttpRequest',
         },
         retries: 5,
-      })
+      },
+    )
       .then(parseResponse)
       .then(() => {
         fns.forEach((fn) => {
