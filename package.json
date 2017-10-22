@@ -56,6 +56,9 @@
     "nyc": "11.2.1",
     "pre-git": "3.15.3"
   },
+  "peerDependencies": {
+    "react-native": "*"
+  },
   "nyc": {
     "include": [
       "src/index.js"

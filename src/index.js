@@ -6,6 +6,9 @@ import fetchRetry from './helpers/fetch-retry';
 import uid from './helpers/uid';
 import parseResponse from './helpers/parse-response';
 
+// TODO move this to /test
+const { Platform } = process.env.NODE_ENV === 'test' ? { Platform: { OS: 'react-native' } } : require('react-native');
+
 const VERSION = require('../package.json').version;
 
 const noop = () => {};
@@ -253,7 +256,7 @@ export default class Analytics {
     message.type = messageType;
     message.context = message.context ? { ...message.context } : {};
     message.context.library = {
-      name: 'analytics-react-native',
+      name: `analytics-${Platform.OS}`,
       version: VERSION,
     };
 
@@ -262,7 +265,7 @@ export default class Analytics {
     }
 
     if (!message.messageId) {
-      message.messageId = `react-native-${uid(32)}`;
+      message.messageId = `${Platform.OS}-${uid(32)}`;
     }
 
     this.queue.push({
