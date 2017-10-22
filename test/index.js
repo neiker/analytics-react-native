@@ -2,7 +2,7 @@ import assert from 'assert';
 import Analytics from '../src';
 import createServer from './server';
 
-const version = require('../package.json').version;
+const { version } = require('../package.json');
 
 let analytics;
 const noop = function noop() {};
@@ -96,7 +96,7 @@ describe('Analytics', () => {
       analytics.enqueue('type', { timestamp: date }, noop);
 
       const msg = analytics.queue[0].message;
-      const callback = analytics.queue[0].callback;
+      const { callback } = analytics.queue[0];
 
       assert.equal(callback, noop);
       assert.equal(msg.type, 'type');
@@ -227,7 +227,9 @@ describe('Analytics', () => {
   describe('#group', () => {
     it('should enqueue a message', () => {
       const date = new Date();
-      analytics.group({ groupId: 'group', userId: 'user', timestamp: date, messageId: id });
+      analytics.group({
+        groupId: 'group', userId: 'user', timestamp: date, messageId: id,
+      });
       assert.deepEqual(analytics.queue[0].message, {
         type: 'group',
         userId: 'user',
@@ -258,7 +260,9 @@ describe('Analytics', () => {
   describe('#track', () => {
     it('should enqueue a message', () => {
       const date = new Date();
-      analytics.track({ userId: 'id', event: 'event', timestamp: date, messageId: id });
+      analytics.track({
+        userId: 'id', event: 'event', timestamp: date, messageId: id,
+      });
       assert.deepEqual(analytics.queue[0].message, {
         type: 'track',
         event: 'event',
@@ -271,7 +275,9 @@ describe('Analytics', () => {
 
     it('should handle a user ids given as a number', () => {
       const date = new Date();
-      analytics.track({ userId: 1, event: 'jumped the shark', timestamp: date, messageId: id });
+      analytics.track({
+        userId: 1, event: 'jumped the shark', timestamp: date, messageId: id,
+      });
       assert.deepEqual(analytics.queue[0].message, {
         userId: 1,
         event: 'jumped the shark',
@@ -350,7 +356,9 @@ describe('Analytics', () => {
   describe('#alias', () => {
     it('should enqueue a message', () => {
       const date = new Date();
-      analytics.alias({ previousId: 'previous', userId: 'id', timestamp: date, messageId: id });
+      analytics.alias({
+        previousId: 'previous', userId: 'id', timestamp: date, messageId: id,
+      });
       assert.deepEqual(analytics.queue[0].message, {
         type: 'alias',
         previousId: 'previous',
