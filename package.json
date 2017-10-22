@@ -1,6 +1,6 @@
 {
   "name": "analytics-react-native",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A React Native client for [Segment](https://segment.com) — The hassle-free way to integrate analytics into any application.",
   "keywords": [
     "analytics",
