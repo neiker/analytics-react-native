@@ -75,14 +75,17 @@ describe('Analytics', () => {
   });
 
   it('should take options', () => {
+    const myEnricher = function enricher(message) { return { ...message }; };
     const analytics2 = new Analytics('key', {
       host: 'a',
       flushAt: 1,
       flushAfter: 2,
+      enrich: myEnricher,
     });
     assert.equal(analytics2.host, 'a');
     assert.equal(analytics2.flushAt, 1);
     assert.equal(analytics2.flushAfter, 2);
+    assert.equal(analytics2.enrich, myEnricher);
   });
 
   it('should keep the flushAt option above zero', () => {
@@ -164,6 +167,24 @@ describe('Analytics', () => {
 
       assert(msg.messageId);
       assert(msg.messageId === '123');
+    });
+
+    it('should enrich the message if defined', () => {
+      const analytics3 = new Analytics('key', {
+        host: 'http://localhost:4063',
+        flushAt: Infinity,
+        flushAfter: Infinity,
+        enrich: (message) => {
+          const enrichedMessage = { ...message };
+          enrichedMessage.userId = 'ABCD';
+          return enrichedMessage;
+        },
+      });
+      analytics3.enqueue('type', { messageId: '123', event: 'test' }, noop);
+      const msg = analytics3.queue[0].message;
+      assert(msg.messageId);
+      assert(msg.messageId === '123');
+      assert(msg.userId === 'ABCD');
     });
   });
 
