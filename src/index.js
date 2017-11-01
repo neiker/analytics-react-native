@@ -12,7 +12,6 @@ const { Platform } = process.env.NODE_ENV === 'test' ? { Platform: { OS: 'react-
 const VERSION = require('../package.json').version;
 
 const noop = () => {};
-const echo = message => message;
 
 /**
  * Expose an `Analytics` client.
@@ -31,7 +30,7 @@ export default class Analytics {
    *   @property {Number} flushAt (default: 20)
    *   @property {Number} flushAfter (default: 10000)
    *   @property {String} host (default: 'https://api.segment.io')
-   *   @property {Function} enrich
+   *   @property {Function | Object} enrich
    */
 
   constructor(
@@ -40,7 +39,7 @@ export default class Analytics {
       host = Analytics.DEFAULT_HOST,
       flushAt = Analytics.DEFAULT_FLUSH_AT,
       flushAfter = Analytics.DEFAULT_FLUSH_AFTER,
-      enrich = echo,
+      enrich = {},
     } = {},
   ) {
     assert(
@@ -255,7 +254,10 @@ export default class Analytics {
    */
 
   enqueue(messageType, msg, fn = noop) {
-    const message = { ...this.enrich(msg) };
+    const message = { ...msg };
+
+    const extraProperties = this.enrich instanceof Function ? this.enrich() : this.enrich;
+    Object.assign(message, extraProperties);
 
     message.type = messageType;
     message.context = message.context ? { ...message.context } : {};

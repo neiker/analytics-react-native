@@ -169,7 +169,7 @@ describe('Analytics', () => {
       assert(msg.messageId === '123');
     });
 
-    it('should enrich the message if defined', () => {
+    it('should enrich the message if defined with a function', () => {
       const analytics3 = new Analytics('key', {
         host: 'http://localhost:4063',
         flushAt: Infinity,
@@ -182,6 +182,22 @@ describe('Analytics', () => {
       });
       analytics3.enqueue('type', { messageId: '123', event: 'test' }, noop);
       const msg = analytics3.queue[0].message;
+      assert(msg.messageId);
+      assert(msg.messageId === '123');
+      assert(msg.userId === 'ABCD');
+    });
+
+    it('should enrich the message if defined with a object', () => {
+      const analytics4 = new Analytics('key', {
+        host: 'http://localhost:4063',
+        flushAt: Infinity,
+        flushAfter: Infinity,
+        enrich: {
+          userId: 'ABCD',
+        },
+      });
+      analytics4.enqueue('type', { messageId: '123', event: 'test' }, noop);
+      const msg = analytics4.queue[0].message;
       assert(msg.messageId);
       assert(msg.messageId === '123');
       assert(msg.userId === 'ABCD');
