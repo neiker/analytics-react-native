@@ -61,20 +61,12 @@ export default class Analytics {
    *
    * @param {Object} message
    * @param {Function} fn (optional)
-   * @return {Analytics}
+   * @return {Promise} resolves to Analytics
    */
 
   identify(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-
-    this.enqueue('identify', message, fn);
-
-    return this;
+    return this.enqueue('identify', message, fn)
+      .then(() => this);
   }
 
   /**
@@ -82,23 +74,19 @@ export default class Analytics {
    *
    * @param {Object} message
    * @param {Function} fn (optional)
-   * @return {Analytics}
+   * @return {Promise} resolves to Analytics
    */
 
   group(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-    assert(
-      message.groupId,
-      'You must pass a `groupId`.',
-    );
-
-    this.enqueue('group', message, fn);
-    return this;
+    return Promise.resolve(message)
+      .then(() => {
+        assert(
+          message.groupId,
+          'You must pass a `groupId`.',
+        );
+      })
+      .then(() => this.enqueue('group', message, fn))
+      .then(() => this);
   }
 
   /**
@@ -106,23 +94,19 @@ export default class Analytics {
    *
    * @param {Object} message
    * @param {Function} fn (optional)
-   * @return {Analytics}
+   * @return {Promise} resolves to Analytics
    */
 
   track(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-    assert(
-      message.event,
-      'You must pass an `event`.',
-    );
-
-    this.enqueue('track', message, fn);
-    return this;
+    return Promise.resolve(message)
+      .then(() => {
+        assert(
+          message.event,
+          'You must pass a `event`.',
+        );
+      })
+      .then(() => this.enqueue('track', message, fn))
+      .then(() => this);
   }
 
   /**
@@ -130,19 +114,12 @@ export default class Analytics {
    *
    * @param {Object} message
    * @param {Function} fn (optional)
-   * @return {Analytics}
+   * @return {Promise} resolves to Analytics
    */
 
   page(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-
-    this.enqueue('page', message, fn);
-    return this;
+    return this.enqueue('page', message, fn)
+      .then(() => this);
   }
 
   /**
@@ -150,19 +127,12 @@ export default class Analytics {
    *
    * @param {Object} message
    * @param {Function} fn (optional)
-   * @return {Analytics}
+   * @return {Promise} resolves to Analytics
    */
 
   screen(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-
-    this.enqueue('screen', message, fn);
-    return this;
+    return this.enqueue('screen', message, fn)
+      .then(() => this);
   }
 
   /**
@@ -170,31 +140,30 @@ export default class Analytics {
    *
    * @param {Object} message
    * @param {Function} fn (optional)
-   * @return {Analytics}
+   * @return {Promise} resolves to Analytics
    */
 
   alias(message, fn) {
-    validate(message);
-
-    assert(
-      message.userId,
-      'You must pass a `userId`.',
-    );
-    assert(
-      message.previousId,
-      'You must pass a `previousId`.',
-    );
-
-    this.enqueue('alias', message, fn);
-
-    return this;
+    return Promise.resolve(message)
+      .then(() => {
+        assert(
+          message.userId,
+          'You must pass a `userId`.',
+        );
+        assert(
+          message.previousId,
+          'You must pass a `previousId`.',
+        );
+      })
+      .then(() => this.enqueue('alias', message, fn))
+      .then(() => this);
   }
 
   /**
    * Flush the current queue and callback `fn(err, batch)`.
    *
-   * @param {Function} fn (optional)
-   * @return {Analytics}
+   * @param {Function} callback (optional)
+   * @return {Boolean}
    */
 
   flush(callback = noop) {
@@ -248,47 +217,59 @@ export default class Analytics {
    * flushed.
    *
    * @param {String} messageType
-   * @param {Object} message
-   * @param {Functino} fn (optional)
+   * @param {Object} msg
+   * @param {Function} fn (optional)
+   * @return {Promise}
    * @api private
    */
 
   enqueue(messageType, msg, fn = noop) {
+    validate(msg);
     const message = { ...msg };
 
-    const extraProperties = this.enrich instanceof Function ? this.enrich() : this.enrich;
-    Object.assign(message, extraProperties);
+    const enricher = this.enrich instanceof Function ? this.enrich() : this.enrich;
 
-    message.type = messageType;
-    message.context = message.context ? { ...message.context } : {};
-    message.context.library = {
-      name: `analytics-${Platform.OS}`,
-      version: VERSION,
-    };
+    return Promise.resolve(enricher)
+      .then((extraProperties) => {
+        Object.assign(message, extraProperties);
+      })
+      .then(() => {
+        assert(
+          message.anonymousId || message.userId,
+          'You must pass either an `anonymousId` or a `userId`.',
+        );
 
-    if (!message.timestamp) {
-      message.timestamp = new Date();
-    }
+        message.type = messageType;
+        message.context = message.context ? { ...message.context } : {};
+        message.context.library = {
+          name: `analytics-${Platform.OS}`,
+          version: VERSION,
+        };
 
-    if (!message.messageId) {
-      message.messageId = `${Platform.OS}-${uid(32)}`;
-    }
+        if (!message.timestamp) {
+          message.timestamp = new Date();
+        }
 
-    this.queue.push({
-      message,
-      callback: fn,
-    });
+        if (!message.messageId) {
+          message.messageId = `${Platform.OS}-${uid(32)}`;
+        }
 
-    if (this.queue.length >= this.flushAt) {
-      this.flush();
-    }
+        this.queue.push({
+          message,
+          callback: fn,
+        });
 
-    if (this.timer) {
-      clearTimeout(this.timer);
-    }
+        if (this.queue.length >= this.flushAt) {
+          this.flush();
+        }
 
-    if (this.flushAfter) {
-      this.timer = setTimeout(() => this.flush(), this.flushAfter);
-    }
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+
+        if (this.flushAfter) {
+          this.timer = setTimeout(() => this.flush(), this.flushAfter);
+        }
+      });
   }
 }

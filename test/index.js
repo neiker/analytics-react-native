@@ -2,7 +2,12 @@ import assert from 'assert';
 import Analytics from '../src';
 import createServer from './server';
 
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const { version } = require('../package.json');
+
+const expect = chai.expect;
+chai.use(chaiAsPromised);
 
 let analytics;
 const noop = function noop() {};
@@ -51,6 +56,7 @@ describe('Analytics', () => {
       host: 'http://localhost:4063',
       flushAt: Infinity,
       flushAfter: Infinity,
+      enrich: {},
     });
   });
 
@@ -75,7 +81,7 @@ describe('Analytics', () => {
   });
 
   it('should take options', () => {
-    const myEnricher = function enricher(message) { return { ...message }; };
+    const myEnricher = {};
     const analytics2 = new Analytics('key', {
       host: 'a',
       flushAt: 1,
@@ -94,38 +100,54 @@ describe('Analytics', () => {
   });
 
   describe('#enqueue', () => {
-    it('should add a message to the queue', () => {
-      const date = new Date();
-      analytics.enqueue('type', { timestamp: date }, noop);
-
-      const msg = analytics.queue[0].message;
-      const { callback } = analytics.queue[0];
-
-      assert.equal(callback, noop);
-      assert.equal(msg.type, 'type');
-      assert.deepEqual(msg.timestamp, date);
-      assert.deepEqual(msg.context, context);
-      assert(msg.messageId);
+    it('should validate a message', () => {
+      assert.throws(() => {
+        analytics.enqueue('type', null);
+      }, error('You must pass a message object.'));
     });
 
-    it('should not modify the original message', () => {
-      const message = { event: 'test' };
-      analytics.enqueue('type', message, noop);
-      assert(!{}.hasOwnProperty.call(message, 'timestamp'));
+    it('should require a userId or anonymousId', () => {
+      expect(analytics.enqueue('type', {}))
+        .to.be.rejectedWith('You must pass either an `anonymousId` or a `userId`.');
+    });
+
+    it('should add a message to the queue', (done) => {
+      const date = new Date();
+      analytics.enqueue('type', { timestamp: date, userId: 1 }, noop)
+        .then(() => {
+          const msg = analytics.queue[0].message;
+          const { callback } = analytics.queue[0];
+          assert.equal(callback, noop);
+          assert.equal(msg.type, 'type');
+          assert.deepEqual(msg.timestamp, date);
+          assert.deepEqual(msg.userId, 1);
+          assert.deepEqual(msg.context, context);
+          assert(msg.messageId);
+        })
+        .then(() => done(), done);
+    });
+
+    it('should not modify the original message', (done) => {
+      const message = { event: 'test', userId: 1 };
+      analytics.enqueue('type', message, noop)
+        .then(() => {
+          assert(!{}.hasOwnProperty.call(message, 'timestamp'));
+        })
+        .then(() => done(), done);
     });
 
     it('should flush the queue if it hits the max length', (done) => {
       analytics.flushAt = 1;
       analytics.flushAfter = null;
       analytics.flush = done;
-      analytics.enqueue('type', {});
+      analytics.enqueue('type', { userId: 1 });
     });
 
     it('should flush after a period of time', (done) => {
       analytics.flushAt = Infinity;
       analytics.flushAfter = 1;
       analytics.flush = done;
-      analytics.enqueue('type', {});
+      analytics.enqueue('type', { userId: 1 });
     });
 
     it('should reset an existing timer', (done) => {
@@ -133,61 +155,84 @@ describe('Analytics', () => {
       analytics.flushAt = Infinity;
       analytics.flushAfter = 1;
       analytics.flush = () => { i += 1; };
-      analytics.enqueue('type', {});
-      analytics.enqueue('type', {});
-      setTimeout(() => {
-        assert.equal(1, i);
-        done();
-      }, 1);
+      analytics.enqueue('type', { userId: 1 })
+        .then(analytics.enqueue('type', { userId: 1 }))
+        .then(() => {
+          setTimeout(() => {
+            assert.equal(1, i);
+            done();
+          }, 1);
+        });
     });
 
-    it('should extend the given context', () => {
-      analytics.enqueue('type', { event: 'test', context: { name: 'travis' } }, noop);
-      assert.deepEqual(analytics.queue[0].message.context, {
-        library: {
-          name: 'analytics-react-native',
-          version,
-        },
-        name: 'travis',
-      });
+    it('should extend the given context', (done) => {
+      analytics.enqueue('type', { event: 'test', context: { name: 'travis' }, userId: 1 }, noop)
+        .then(() => {
+          assert.deepEqual(analytics.queue[0].message.context, {
+            library: {
+              name: 'analytics-react-native',
+              version,
+            },
+            name: 'travis',
+          });
+        })
+        .then(() => done(), done);
     });
 
-    it('should add a message id', () => {
-      analytics.enqueue('type', { event: 'test' }, noop);
-
-      const msg = analytics.queue[0].message;
-      assert(msg.messageId);
-      assert(/react-native-[a-zA-Z0-9]{32}/.test(msg.messageId));
+    it('should add a message id', (done) => {
+      analytics.enqueue('type', { event: 'test', userId: 1 }, noop)
+        .then(() => {
+          const msg = analytics.queue[0].message;
+          assert(msg.messageId);
+          assert(/react-native-[a-zA-Z0-9]{32}/.test(msg.messageId));
+        })
+        .then(() => done(), done);
     });
 
-    it('shouldn\'t change the message id', () => {
-      analytics.enqueue('type', { messageId: '123', event: 'test' }, noop);
-
-      const msg = analytics.queue[0].message;
-
-      assert(msg.messageId);
-      assert(msg.messageId === '123');
+    it('shouldn\'t change the message id', (done) => {
+      analytics.enqueue('type', { messageId: '123', event: 'test', userId: 1 }, noop)
+        .then(() => {
+          const msg = analytics.queue[0].message;
+          assert(msg.messageId);
+          assert(msg.messageId === '123');
+        })
+        .then(() => done(), done);
     });
 
-    it('should enrich the message if defined with a function', () => {
+    it('should enrich the message if defined with a promise', (done) => {
+      let count = 0
       const analytics3 = new Analytics('key', {
         host: 'http://localhost:4063',
         flushAt: Infinity,
         flushAfter: Infinity,
-        enrich: (message) => {
-          const enrichedMessage = { ...message };
-          enrichedMessage.userId = 'ABCD';
-          return enrichedMessage;
-        },
+        enrich: () => new Promise((resolve) => {
+          const enrichedMessage = { };
+          return Promise.resolve({})
+            .then(() => {
+              count += 1;
+              enrichedMessage.userId = count;
+            })
+            .finally(() => resolve(enrichedMessage));
+        }),
       });
-      analytics3.enqueue('type', { messageId: '123', event: 'test' }, noop);
-      const msg = analytics3.queue[0].message;
-      assert(msg.messageId);
-      assert(msg.messageId === '123');
-      assert(msg.userId === 'ABCD');
+      analytics3.enqueue('type', { messageId: '123', event: 'test' }, noop)
+        .then(() => {
+          const msg = analytics3.queue[0].message;
+          assert(msg.messageId);
+          assert(msg.messageId === '123');
+          assert(msg.userId === 1);
+        })
+        .then(() => analytics3.enqueue('type', { messageId: '456', event: 'test' }, noop))
+        .then(() => {
+          const msg = analytics3.queue[1].message;
+          assert(msg.messageId);
+          assert(msg.messageId === '456');
+          assert(msg.userId === 2);
+        })
+        .then(() => done(), done);
     });
 
-    it('should enrich the message if defined with a object', () => {
+    it('should enrich the message if defined with a object', (done) => {
       const analytics4 = new Analytics('key', {
         host: 'http://localhost:4063',
         flushAt: Infinity,
@@ -196,11 +241,13 @@ describe('Analytics', () => {
           userId: 'ABCD',
         },
       });
-      analytics4.enqueue('type', { messageId: '123', event: 'test' }, noop);
-      const msg = analytics4.queue[0].message;
-      assert(msg.messageId);
-      assert(msg.messageId === '123');
-      assert(msg.userId === 'ABCD');
+      analytics4.enqueue('type', { messageId: '123', event: 'test' }, noop)
+        .then(() => {
+          const msg = analytics4.queue[0].message;
+          assert(msg.messageId);
+          assert(msg.messageId === '123');
+          assert(msg.userId === 'ABCD');
+        }).then(() => done(), done);
     });
   });
 
@@ -238,188 +285,141 @@ describe('Analytics', () => {
   });
 
   describe('#identify', () => {
-    it('should enqueue a message', () => {
+    it('should enqueue a message', (done) => {
       const date = new Date();
-      analytics.identify({ userId: 'id', timestamp: date, messageId: id });
-      assert.deepEqual(analytics.queue[0].message, {
-        type: 'identify',
-        userId: 'id',
-        timestamp: date,
-        context,
-        messageId: id,
-      });
-    });
-
-    it('should validate a message', () => {
-      assert.throws(analytics.identify, error('You must pass a message object.'));
-    });
-
-    it('should require a userId or anonymousId', () => {
-      assert.throws(() => {
-        analytics.identify({});
-      }, error('You must pass either an `anonymousId` or a `userId`.'));
+      analytics.identify({ userId: 'id', timestamp: date, messageId: id })
+        .then(() => {
+          assert.deepEqual(analytics.queue[0].message, {
+            type: 'identify',
+            userId: 'id',
+            timestamp: date,
+            context,
+            messageId: id,
+          });
+        })
+        .then(() => done(), done);
     });
   });
 
   describe('#group', () => {
-    it('should enqueue a message', () => {
+    it('should enqueue a message', (done) => {
       const date = new Date();
       analytics.group({
         groupId: 'group', userId: 'user', timestamp: date, messageId: id,
-      });
-      assert.deepEqual(analytics.queue[0].message, {
-        type: 'group',
-        userId: 'user',
-        groupId: 'group',
-        timestamp: date,
-        context,
-        messageId: id,
-      });
-    });
-
-    it('should validate a message', () => {
-      assert.throws(analytics.group, error('You must pass a message object.'));
-    });
-
-    it('should require a userId or anonymousId', () => {
-      assert.throws(() => {
-        analytics.group({});
-      }, error('You must pass either an `anonymousId` or a `userId`.'));
+      }).then(() => {
+        assert.deepEqual(analytics.queue[0].message, {
+          type: 'group',
+          userId: 'user',
+          groupId: 'group',
+          timestamp: date,
+          context,
+          messageId: id,
+        });
+      }).then(() => done(), done);
     });
 
     it('should require a groupId', () => {
-      assert.throws(() => {
-        analytics.group({ userId: 'id' });
-      }, error('You must pass a `groupId`.'));
+      expect(analytics.group({ userId: 'id' }))
+        .to.be.rejectedWith('You must pass a `groupId`.');
     });
   });
 
   describe('#track', () => {
-    it('should enqueue a message', () => {
+    it('should enqueue a message', (done) => {
       const date = new Date();
       analytics.track({
         userId: 'id', event: 'event', timestamp: date, messageId: id,
-      });
-      assert.deepEqual(analytics.queue[0].message, {
-        type: 'track',
-        event: 'event',
-        userId: 'id',
-        timestamp: date,
-        context,
-        messageId: id,
-      });
+      }).then(() => {
+        assert.deepEqual(analytics.queue[0].message, {
+          type: 'track',
+          event: 'event',
+          userId: 'id',
+          timestamp: date,
+          context,
+          messageId: id,
+        });
+      }).then(() => done(), done);
     });
 
-    it('should handle a user ids given as a number', () => {
+    it('should handle a user ids given as a number', (done) => {
       const date = new Date();
       analytics.track({
         userId: 1, event: 'jumped the shark', timestamp: date, messageId: id,
-      });
-      assert.deepEqual(analytics.queue[0].message, {
-        userId: 1,
-        event: 'jumped the shark',
-        type: 'track',
-        timestamp: date,
-        context,
-        messageId: id,
-      });
-    });
-
-    it('should validate a message', () => {
-      assert.throws(analytics.track, error('You must pass a message object.'));
-    });
-
-    it('should require a userId or anonymousId', () => {
-      assert.throws(() => {
-        analytics.track({});
-      }, error('You must pass either an `anonymousId` or a `userId`.'));
+      }).then(() => {
+        assert.deepEqual(analytics.queue[0].message, {
+          userId: 1,
+          event: 'jumped the shark',
+          type: 'track',
+          timestamp: date,
+          context,
+          messageId: id,
+        });
+      }).then(() => done(), done);
     });
 
     it('should require an event', () => {
-      assert.throws(() => {
-        analytics.track({ userId: 'id' });
-      }, error('You must pass an `event`.'));
+      expect(analytics.track({ userId: 'id' }))
+        .to.be.rejectedWith('You must pass a `event`.');
     });
   });
 
   describe('#page', () => {
-    it('should enqueue a message', () => {
+    it('should enqueue a message', (done) => {
       const date = new Date();
-      analytics.page({ userId: 'id', timestamp: date, messageId: id });
-      assert.deepEqual(analytics.queue[0].message, {
-        type: 'page',
-        userId: 'id',
-        timestamp: date,
-        context,
-        messageId: id,
-      });
-    });
-
-    it('should validate a message', () => {
-      assert.throws(analytics.page, error('You must pass a message object.'));
-    });
-
-    it('should require a userId or anonymousId', () => {
-      assert.throws(() => {
-        analytics.page({});
-      }, error('You must pass either an `anonymousId` or a `userId`.'));
+      analytics.page({ userId: 'id', timestamp: date, messageId: id })
+        .then(() => {
+          assert.deepEqual(analytics.queue[0].message, {
+            type: 'page',
+            userId: 'id',
+            timestamp: date,
+            context,
+            messageId: id,
+          });
+        }).then(() => done(), done);
     });
   });
 
   describe('#screen', () => {
-    it('should enqueue a message', () => {
+    it('should enqueue a message', (done) => {
       const date = new Date();
-      analytics.screen({ userId: 'id', timestamp: date, messageId: id });
-      assert.deepEqual(analytics.queue[0].message, {
-        type: 'screen',
-        userId: 'id',
-        timestamp: date,
-        context,
-        messageId: id,
-      });
-    });
-
-    it('should validate a message', () => {
-      assert.throws(analytics.screen, error('You must pass a message object.'));
-    });
-
-    it('should require a userId or anonymousId', () => {
-      assert.throws(() => {
-        analytics.screen({});
-      }, error('You must pass either an `anonymousId` or a `userId`.'));
+      analytics.screen({ userId: 'id', timestamp: date, messageId: id })
+        .then(() => {
+          assert.deepEqual(analytics.queue[0].message, {
+            type: 'screen',
+            userId: 'id',
+            timestamp: date,
+            context,
+            messageId: id,
+          });
+        }).then(() => done(), done);
     });
   });
 
   describe('#alias', () => {
-    it('should enqueue a message', () => {
+    it('should enqueue a message', (done) => {
       const date = new Date();
       analytics.alias({
         previousId: 'previous', userId: 'id', timestamp: date, messageId: id,
-      });
-      assert.deepEqual(analytics.queue[0].message, {
-        type: 'alias',
-        previousId: 'previous',
-        userId: 'id',
-        timestamp: date,
-        context,
-        messageId: id,
-      });
-    });
-
-    it('should validate a message', () => {
-      assert.throws(analytics.alias, error('You must pass a message object.'));
+      }).then(() => {
+        assert.deepEqual(analytics.queue[0].message, {
+          type: 'alias',
+          previousId: 'previous',
+          userId: 'id',
+          timestamp: date,
+          context,
+          messageId: id,
+        });
+      }).then(() => done(), done);
     });
 
     it('should require a userId', () => {
-      assert.throws(() => {
-        analytics.alias({});
-      }, error('You must pass a `userId`.'));
+      expect(analytics.alias({}))
+        .to.be.rejectedWith('You must pass a `userId`.');
     });
 
     it('should require a previousId', () => {
-      assert.throws(() => {
-        analytics.alias({ userId: 'id' });
-      }, error('You must pass a `previousId`.'));
+      expect(analytics.alias({ userId: 'id' }))
+        .to.be.rejectedWith('You must pass a `previousId`.');
     });
   });
 });
