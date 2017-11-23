@@ -25,7 +25,7 @@ export default class Analytics {
    * Initialize a new `Analytics` with your Segment project's `writeKey` and an
    * optional dictionary of `options`.
    *
-   * @param {String} writeKey
+   * @param {String} writeKey (optional - won't send if not set)
    * @param {Object} options (optional)
    *   @property {Number} flushAt (default: 20)
    *   @property {Number} flushAfter (default: 10000)
@@ -42,11 +42,6 @@ export default class Analytics {
       enrich = {},
     } = {},
   ) {
-    assert(
-      writeKey,
-      'You must pass your Segment project\'s write key.',
-    );
-
     this.queue = [];
 
     this.writeKey = writeKey;
@@ -167,7 +162,7 @@ export default class Analytics {
    */
 
   flush(callback = noop) {
-    if (!this.queue.length) {
+    if (!this.queue.length || !this.writeKey) {
       return setImmediate(callback);
     }
 

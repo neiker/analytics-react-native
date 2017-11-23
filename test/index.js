@@ -64,10 +64,6 @@ describe('Analytics', () => {
     assert.equal('function', typeof Analytics);
   });
 
-  it('should require a write key', () => {
-    assert.throws(() => new Analytics(), error('You must pass your Segment project\'s write key.'));
-  });
-
   it('should create a queue', () => {
     assert.deepEqual(analytics.queue, []);
   });
@@ -254,6 +250,18 @@ describe('Analytics', () => {
   describe('#flush', () => {
     it('should not fail when no items are in the queue', (done) => {
       analytics.flush(done);
+    });
+
+    it('should not fail when no writeKey is set', (done) => {
+      const noWritekeyAnalytics = new Analytics(null, {
+        host: 'http://localhost:4063',
+        flushAt: Infinity,
+        flushAfter: Infinity,
+        enrich: {},
+      })
+      analytics.flushAt = 2;
+      enqueue(noWritekeyAnalytics, [1, 2, 3]);
+      noWritekeyAnalytics.flush(done);
     });
 
     it('should send a batch of items', (done) => {
