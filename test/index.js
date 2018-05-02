@@ -46,6 +46,10 @@ describe('Analytics', () => {
     createServer().then(done);
   });
 
+  after(() => {
+    process.exit();
+  });
+
   beforeEach(() => {
     analytics = new Analytics('key', {
       host: 'http://localhost:4063',
