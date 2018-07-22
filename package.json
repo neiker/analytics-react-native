@@ -52,7 +52,7 @@
     "eslint-plugin-import": "2.11.0",
     "express": "4.16.3",
     "mocha": "5.1.1",
-    "node-fetch": "2.1.2",
+    "node-fetch": "2.2.0",
     "nyc": "11.7.1",
     "pre-git": "3.17.1"
   },
