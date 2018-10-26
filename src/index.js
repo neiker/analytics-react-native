@@ -64,13 +64,6 @@ export default class Analytics {
    */
 
   identify(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-
     this.enqueue('identify', message, fn);
 
     return this;
@@ -85,18 +78,8 @@ export default class Analytics {
    */
 
   group(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-    assert(
-      message.groupId,
-      'You must pass a `groupId`.',
-    );
-
     this.enqueue('group', message, fn);
+
     return this;
   }
 
@@ -109,18 +92,8 @@ export default class Analytics {
    */
 
   track(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-    assert(
-      message.event,
-      'You must pass an `event`.',
-    );
-
     this.enqueue('track', message, fn);
+
     return this;
   }
 
@@ -133,14 +106,8 @@ export default class Analytics {
    */
 
   page(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-
     this.enqueue('page', message, fn);
+
     return this;
   }
 
@@ -153,14 +120,8 @@ export default class Analytics {
    */
 
   screen(message, fn) {
-    validate(message);
-
-    assert(
-      message.anonymousId || message.userId,
-      'You must pass either an `anonymousId` or a `userId`.',
-    );
-
     this.enqueue('screen', message, fn);
+
     return this;
   }
 
@@ -173,17 +134,6 @@ export default class Analytics {
    */
 
   alias(message, fn) {
-    validate(message);
-
-    assert(
-      message.userId,
-      'You must pass a `userId`.',
-    );
-    assert(
-      message.previousId,
-      'You must pass a `previousId`.',
-    );
-
     this.enqueue('alias', message, fn);
 
     return this;
@@ -253,6 +203,8 @@ export default class Analytics {
    */
 
   enqueue(messageType, msg, fn = noop) {
+    validate(msg, messageType);
+
     const message = { ...msg };
 
     message.type = messageType;
