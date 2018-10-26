@@ -18,7 +18,9 @@ const noop = () => {};
  */
 export default class Analytics {
   static DEFAULT_HOST = 'https://api.segment.io';
+
   static DEFAULT_FLUSH_AT = 20;
+
   static DEFAULT_FLUSH_AFTER = 10000;
 
   /**
