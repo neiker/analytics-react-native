@@ -7,7 +7,9 @@ import uid from './helpers/uid';
 import parseResponse from './helpers/parse-response';
 
 // TODO move this to /test
-const { Platform } = process.env.NODE_ENV === 'test' ? { Platform: { OS: 'react-native' } } : require('react-native');
+const { Platform } = process.env.NODE_ENV === 'test'
+  ? { Platform: { OS: 'react-native' } }
+  : require('react-native');
 
 const VERSION = require('../package.json').version;
 
@@ -55,16 +57,17 @@ export default class Analytics {
     this.flushAt = Math.max(flushAt, 1);
     this.flushAfter = flushAfter;
   }
+
   /**
    * Send an identify `message`.
    *
    * @param {Object} message
-   * @param {Function} fn (optional)
+   * @param {Function} callback (optional)
    * @return {Analytics}
    */
 
-  identify(message, fn) {
-    this.enqueue('identify', message, fn);
+  identify(message, callback) {
+    this.enqueue('identify', message, callback);
 
     return this;
   }
@@ -73,12 +76,12 @@ export default class Analytics {
    * Send a group `message`.
    *
    * @param {Object} message
-   * @param {Function} fn (optional)
+   * @param {Function} callback (optional)
    * @return {Analytics}
    */
 
-  group(message, fn) {
-    this.enqueue('group', message, fn);
+  group(message, callback) {
+    this.enqueue('group', message, callback);
 
     return this;
   }
@@ -87,12 +90,12 @@ export default class Analytics {
    * Send a track `message`.
    *
    * @param {Object} message
-   * @param {Function} fn (optional)
+   * @param {Function} callback (optional)
    * @return {Analytics}
    */
 
-  track(message, fn) {
-    this.enqueue('track', message, fn);
+  track(message, callback) {
+    this.enqueue('track', message, callback);
 
     return this;
   }
@@ -101,12 +104,12 @@ export default class Analytics {
    * Send a page `message`.
    *
    * @param {Object} message
-   * @param {Function} fn (optional)
+   * @param {Function} callback (optional)
    * @return {Analytics}
    */
 
-  page(message, fn) {
-    this.enqueue('page', message, fn);
+  page(message, callback) {
+    this.enqueue('page', message, callback);
 
     return this;
   }
@@ -115,12 +118,12 @@ export default class Analytics {
    * Send a screen `message`.
    *
    * @param {Object} message
-   * @param {Function} fn (optional)
+   * @param {Function} callback (optional)
    * @return {Analytics}
    */
 
-  screen(message, fn) {
-    this.enqueue('screen', message, fn);
+  screen(message, callback) {
+    this.enqueue('screen', message, callback);
 
     return this;
   }
@@ -129,37 +132,35 @@ export default class Analytics {
    * Send an alias `message`.
    *
    * @param {Object} message
-   * @param {Function} fn (optional)
+   * @param {Function} callback (optional)
    * @return {Analytics}
    */
 
-  alias(message, fn) {
-    this.enqueue('alias', message, fn);
+  alias(message, callback) {
+    this.enqueue('alias', message, callback);
 
     return this;
   }
 
   /**
-   * Flush the current queue and callback `fn(err, batch)`.
+   * Flush the current queue and callback `callback(err, batch)`.
    *
-   * @param {Function} fn (optional)
+   * @param {Function} callback (optional)
    * @return {Analytics}
    */
 
-  flush(callback = noop) {
+  flush(flushCallback = noop) {
     if (!this.queue.length) {
-      return setImmediate(callback);
+      return setImmediate(flushCallback);
     }
 
-    const items = this.queue.splice(0, this.flushAt);
+    const queuedItems = this.queue.splice(0, this.flushAt);
 
-    const fns = items.map(item => item.callback);
-    fns.push(callback);
-
-    const batch = items.map(item => item.message);
+    const callbacks = queuedItems.map(item => item.callback);
+    callbacks.push(flushCallback);
 
     const data = {
-      batch,
+      batch: queuedItems.map(item => item.message),
       timestamp: new Date(),
       sentAt: new Date(),
     };
@@ -179,13 +180,13 @@ export default class Analytics {
     )
       .then(parseResponse)
       .then(() => {
-        fns.forEach((fn) => {
-          fn(undefined, data);
+        callbacks.forEach((callback) => {
+          callback(undefined, data);
         });
       })
       .catch((error) => {
-        fns.forEach((fn) => {
-          fn(error);
+        callbacks.forEach((callback) => {
+          callback(error);
         });
       });
 
@@ -198,11 +199,11 @@ export default class Analytics {
    *
    * @param {String} messageType
    * @param {Object} message
-   * @param {Functino} fn (optional)
+   * @param {Functino} callback (optional)
    * @api private
    */
 
-  enqueue(messageType, msg, fn = noop) {
+  enqueue(messageType, msg, callback = noop) {
     validate(msg, messageType);
 
     const message = { ...msg };
@@ -224,7 +225,7 @@ export default class Analytics {
 
     this.queue.push({
       message,
-      callback: fn,
+      callback,
     });
 
     if (this.queue.length >= this.flushAt) {
