@@ -4,6 +4,8 @@ import createServer from './server';
 
 const { version } = require('../package.json');
 
+const MAX_VALID_INTEGER = 2147483647;
+
 let analytics;
 const noop = function noop() {};
 
@@ -53,8 +55,8 @@ describe('Analytics', () => {
   beforeEach(() => {
     analytics = new Analytics('key', {
       host: 'http://localhost:4063',
-      flushAt: Infinity,
-      flushAfter: Infinity,
+      flushAt: MAX_VALID_INTEGER,
+      flushAfter: MAX_VALID_INTEGER,
     });
   });
 
@@ -123,7 +125,7 @@ describe('Analytics', () => {
     });
 
     it('should flush after a period of time', (done) => {
-      analytics.flushAt = Infinity;
+      analytics.flushAt = MAX_VALID_INTEGER;
       analytics.flushAfter = 1;
       analytics.flush = done;
       analytics.enqueue('screen', { userId: '1' });
@@ -131,7 +133,7 @@ describe('Analytics', () => {
 
     it('should reset an existing timer', (done) => {
       let i = 0;
-      analytics.flushAt = Infinity;
+      analytics.flushAt = MAX_VALID_INTEGER;
       analytics.flushAfter = 1;
       analytics.flush = () => { i += 1; };
       analytics.enqueue('screen', { userId: '1' });
