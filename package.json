@@ -53,7 +53,7 @@
     "express": "4.16.4",
     "mocha": "^5.2.0",
     "node-fetch": "2.2.0",
-    "nyc": "13.1.0",
+    "nyc": "13.2.0",
     "pre-git": "3.17.1"
   },
   "peerDependencies": {
