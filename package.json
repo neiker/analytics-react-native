@@ -12,13 +12,13 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha 'test/index.js' --require babel-register --require mocha_setup.js",
-    "test:watch": "npm run test -- --watch",
-    "coverage": "nyc npm test",
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
+    "coverage": "npm test -- --coverage",
     "coverage:html": "npm run coverage && open ./coverage/index.html",
     "coverage:publish": "npm run coverage && cat ./coverage/lcov.info | codecov",
     "lint": "eslint src/",
-    "compile": "babel -d lib/ src/",
+    "compile": "babel -d lib/ src/ --ignore '**/*.test.js'",
     "prepare": "npm run compile"
   },
   "repository": {
@@ -32,47 +32,27 @@
     "url": "https://github.com/neiker/analytics-react-native/issues"
   },
   "dependencies": {
+    "axios": "0.19.0",
+    "axios-retry": "3.1.2",
     "base-64": "0.1.0",
     "type-of": "2.0.1"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-eslint": "^10.0.1",
+    "@babel/cli": "7.4.4",
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
+    "@babel/register": "7.4.4",
+    "babel-eslint": "10.0.1",
     "babel-plugin-inline-package-json": "2.0.0",
-    "babel-plugin-istanbul": "^5.1.4",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-polyfill": "6.26.0",
-    "babel-preset-es2015": "6.24.1",
-    "babel-register": "6.26.0",
-    "body-parser": "1.19.0",
-    "codecov": "^3.5.0",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.17.3",
-    "express": "4.17.1",
-    "mocha": "^6.1.4",
-    "node-fetch": "2.6.0",
-    "nyc": "14.1.1",
+    "jest": "24.8.0",
+    "jest-mock-axios": "3.0.0",
     "pre-git": "3.17.1"
   },
   "peerDependencies": {
     "react-native": "*"
-  },
-  "nyc": {
-    "include": [
-      "src/index.js"
-    ],
-    "require": [
-      "babel-register"
-    ],
-    "reporter": [
-      "lcov",
-      "text",
-      "html"
-    ],
-    "sourceMap": false,
-    "instrument": false
   },
   "config": {
     "pre-git": {
