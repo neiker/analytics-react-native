@@ -9,6 +9,7 @@ import parseResponse from './helpers/parse-response';
 // TODO move this to /test
 const { Platform } = process.env.NODE_ENV === 'test'
   ? { Platform: { OS: 'react-native' } }
+  // eslint-disable-next-line import/no-unresolved
   : require('react-native');
 
 const VERSION = require('../package.json').version;
