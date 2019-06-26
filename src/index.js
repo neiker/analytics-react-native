@@ -1,5 +1,8 @@
 import base64 from 'base-64';
 
+// eslint-disable-next-line import/no-unresolved
+import { Platform } from 'react-native';
+
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 
@@ -8,12 +11,6 @@ import validate from './helpers/validate';
 import uid from './helpers/uid';
 
 axiosRetry(axios, { retries: 3 });
-
-// TODO move this to /test
-const { Platform } = process.env.NODE_ENV === 'test'
-  ? { Platform: { OS: 'react-native' } }
-  // eslint-disable-next-line import/no-unresolved
-  : require('react-native');
 
 const VERSION = require('../package.json').version;
 
