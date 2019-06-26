@@ -1,16 +1,16 @@
 import base64 from 'base-64';
 
+// eslint-disable-next-line import/no-unresolved
+import { Platform } from 'react-native';
+
+import axios from 'axios';
+import axiosRetry from 'axios-retry';
+
 import assert from './helpers/assert';
 import validate from './helpers/validate';
-import fetchRetry from './helpers/fetch-retry';
 import uid from './helpers/uid';
-import parseResponse from './helpers/parse-response';
 
-// TODO move this to /test
-const { Platform } = process.env.NODE_ENV === 'test'
-  ? { Platform: { OS: 'react-native' } }
-  // eslint-disable-next-line import/no-unresolved
-  : require('react-native');
+axiosRetry(axios, { retries: 3 });
 
 const VERSION = require('../package.json').version;
 
@@ -20,12 +20,6 @@ const noop = () => {};
  * Expose an `Analytics` client.
  */
 export default class Analytics {
-  static DEFAULT_HOST = 'https://api.segment.io';
-
-  static DEFAULT_FLUSH_AT = 20;
-
-  static DEFAULT_FLUSH_AFTER = 10000;
-
   /**
    * Initialize a new `Analytics` with your Segment project's `writeKey` and an
    * optional dictionary of `options`.
@@ -166,20 +160,18 @@ export default class Analytics {
       sentAt: new Date(),
     };
 
-    fetchRetry(
+    axios(
       `${this.host}/v1/batch`,
       {
-        body: JSON.stringify(data),
+        data,
         method: 'post',
         headers: {
           Authorization: `Basic ${base64.encode(this.writeKey)}`,
           'Content-Type': 'application/json; charset=utf-8',
           'X-Requested-With': 'XMLHttpRequest',
         },
-        retries: 5,
       },
     )
-      .then(parseResponse)
       .then(() => {
         callbacks.forEach((callback) => {
           callback(undefined, data);
@@ -242,3 +234,9 @@ export default class Analytics {
     }
   }
 }
+
+Analytics.DEFAULT_HOST = 'https://api.segment.io';
+
+Analytics.DEFAULT_FLUSH_AT = 20;
+
+Analytics.DEFAULT_FLUSH_AFTER = 10000;

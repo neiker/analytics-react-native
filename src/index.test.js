@@ -1,13 +1,16 @@
+import mockAxios from 'jest-mock-axios';
+
+/* eslint-env jest */
+
 import assert from 'assert';
-import Analytics from '../src';
-import createServer from './server';
+import Analytics from '.';
 
 const { version } = require('../package.json');
 
-const MAX_VALID_INTEGER = 2147483647;
+const MAX_VALID_INTEGER = 500;
 
 let analytics;
-const noop = function noop() {};
+function noop() {}
 
 const id = 'id';
 const context = {
@@ -44,14 +47,6 @@ function error(message) {
 }
 
 describe('Analytics', () => {
-  before((done) => {
-    createServer().then(done);
-  });
-
-  after(() => {
-    process.exit();
-  });
-
   beforeEach(() => {
     analytics = new Analytics('key', {
       host: 'http://localhost:4063',
@@ -60,19 +55,23 @@ describe('Analytics', () => {
     });
   });
 
-  it('should expose a constructor', () => {
+  afterEach(() => {
+    mockAxios.reset();
+  });
+
+  test('should expose a constructor', () => {
     assert.equal('function', typeof Analytics);
   });
 
-  it('should require a write key', () => {
+  test('should require a write key', () => {
     assert.throws(() => new Analytics(), error('You must pass your Segment project\'s write key.'));
   });
 
-  it('should create a queue', () => {
+  test('should create a queue', () => {
     assert.deepEqual(analytics.queue, []);
   });
 
-  it('should set default options', () => {
+  test('should set default options', () => {
     const analytics2 = new Analytics('key');
     assert.equal(analytics2.writeKey, 'key');
     assert.equal(analytics2.host, 'https://api.segment.io');
@@ -80,7 +79,7 @@ describe('Analytics', () => {
     assert.equal(analytics2.flushAfter, 10000);
   });
 
-  it('should take options', () => {
+  test('should take options', () => {
     const analytics2 = new Analytics('key', {
       host: 'a',
       flushAt: 1,
@@ -91,13 +90,13 @@ describe('Analytics', () => {
     assert.equal(analytics2.flushAfter, 2);
   });
 
-  it('should keep the flushAt option above zero', () => {
+  test('should keep the flushAt option above zero', () => {
     const analytics2 = new Analytics('key', { flushAt: 0 });
     assert.equal(analytics2.flushAt, 1);
   });
 
   describe('#enqueue', () => {
-    it('should add a message to the queue', () => {
+    test('should add a message to the queue', () => {
       const date = new Date();
       analytics.enqueue('screen', { timestamp: date, userId: '1' }, noop);
 
@@ -111,27 +110,27 @@ describe('Analytics', () => {
       assert(msg.messageId);
     });
 
-    it('should not modify the original message', () => {
+    test('should not modify the original message', () => {
       const message = { event: 'test', userId: '1' };
       analytics.enqueue('screen', message, noop);
       assert(!{}.hasOwnProperty.call(message, 'timestamp'));
     });
 
-    it('should flush the queue if it hits the max length', (done) => {
+    test('should flush the queue if it hits the max length', (done) => {
       analytics.flushAt = 1;
       analytics.flushAfter = null;
       analytics.flush = done;
       analytics.enqueue('screen', { userId: '1' });
     });
 
-    it('should flush after a period of time', (done) => {
+    test('should flush after a period of time', (done) => {
       analytics.flushAt = MAX_VALID_INTEGER;
       analytics.flushAfter = 1;
       analytics.flush = done;
       analytics.enqueue('screen', { userId: '1' });
     });
 
-    it('should reset an existing timer', (done) => {
+    test('should reset an existing timer', (done) => {
       let i = 0;
       analytics.flushAt = MAX_VALID_INTEGER;
       analytics.flushAfter = 1;
@@ -144,7 +143,7 @@ describe('Analytics', () => {
       }, 1);
     });
 
-    it('should extend the given context', () => {
+    test('should extend the given context', () => {
       analytics.enqueue('screen', { event: 'test', userId: '1', context: { name: 'travis' } }, noop);
       assert.deepEqual(analytics.queue[0].message.context, {
         library: {
@@ -155,7 +154,7 @@ describe('Analytics', () => {
       });
     });
 
-    it('should add a message id', () => {
+    test('should add a message id', () => {
       analytics.enqueue('screen', { event: 'test', userId: '1' }, noop);
 
       const msg = analytics.queue[0].message;
@@ -163,7 +162,7 @@ describe('Analytics', () => {
       assert(/react-native-[a-zA-Z0-9]{32}/.test(msg.messageId));
     });
 
-    it('shouldn\'t change the message id', () => {
+    test('shouldn\'t change the message id', () => {
       analytics.enqueue('screen', { messageId: '123', event: 'test', userId: '1' }, noop);
 
       const msg = analytics.queue[0].message;
@@ -174,11 +173,11 @@ describe('Analytics', () => {
   });
 
   describe('#flush', () => {
-    it('should not fail when no items are in the queue', (done) => {
+    test('should not fail when no items are in the queue', (done) => {
       analytics.flush(done);
     });
 
-    it('should send a batch of items', (done) => {
+    test('should send a batch of items', (done) => {
       analytics.flushAt = 2;
       enqueue(analytics, [1, 2, 3]);
 
@@ -193,21 +192,25 @@ describe('Analytics', () => {
 
         return done();
       });
+
+      mockAxios.mockResponse({});
     });
 
-    it('should callback with an HTTP error', (done) => {
+    test('should callback with an HTTP error', (done) => {
       enqueue(analytics, ['error']);
 
       analytics.flush((err) => {
         assert(err);
-        assert.equal(err.message, 'Bad Request');
+        assert.equal(err.statusText, 'Bad Request');
         done();
       });
+
+      mockAxios.mockError({ status: 404, statusText: 'Bad Request' });
     });
   });
 
   describe('#identify', () => {
-    it('should enqueue a message', () => {
+    test('should enqueue a message', () => {
       const date = new Date();
       analytics.identify({ userId: 'id', timestamp: date, messageId: id });
       assert.deepEqual(analytics.queue[0].message, {
@@ -219,13 +222,13 @@ describe('Analytics', () => {
       });
     });
 
-    it('should validate a message', () => {
+    test('should validate a message', () => {
       assert.throws(() => {
         analytics.identify();
       }, error('You must pass a message object.'));
     });
 
-    it('should require a userId or anonymousId', () => {
+    test('should require a userId or anonymousId', () => {
       assert.throws(() => {
         analytics.identify({});
       }, error('You must pass either an `anonymousId` or a `userId`.'));
@@ -233,7 +236,7 @@ describe('Analytics', () => {
   });
 
   describe('#group', () => {
-    it('should enqueue a message', () => {
+    test('should enqueue a message', () => {
       const date = new Date();
       analytics.group({
         groupId: 'group', userId: 'user', timestamp: date, messageId: id,
@@ -248,19 +251,19 @@ describe('Analytics', () => {
       });
     });
 
-    it('should validate a message', () => {
+    test('should validate a message', () => {
       assert.throws(() => {
         analytics.group();
       }, error('You must pass a message object.'));
     });
 
-    it('should require a userId or anonymousId', () => {
+    test('should require a userId or anonymousId', () => {
       assert.throws(() => {
         analytics.group({});
       }, error('You must pass either an `anonymousId` or a `userId`.'));
     });
 
-    it('should require a groupId', () => {
+    test('should require a groupId', () => {
       assert.throws(() => {
         analytics.group({ userId: 'id' });
       }, error('You must pass a `groupId`.'));
@@ -268,7 +271,7 @@ describe('Analytics', () => {
   });
 
   describe('#track', () => {
-    it('should enqueue a message', () => {
+    test('should enqueue a message', () => {
       const date = new Date();
       analytics.track({
         userId: 'id', event: 'event', timestamp: date, messageId: id,
@@ -283,7 +286,7 @@ describe('Analytics', () => {
       });
     });
 
-    it('should handle a user ids given as a number', () => {
+    test('should handle a user ids given as a number', () => {
       const date = new Date();
       analytics.track({
         userId: 1, event: 'jumped the shark', timestamp: date, messageId: id,
@@ -298,19 +301,19 @@ describe('Analytics', () => {
       });
     });
 
-    it('should validate a message', () => {
+    test('should validate a message', () => {
       assert.throws(() => {
         analytics.track();
       }, error('You must pass a message object.'));
     });
 
-    it('should require a userId or anonymousId', () => {
+    test('should require a userId or anonymousId', () => {
       assert.throws(() => {
         analytics.track({});
       }, error('You must pass either an `anonymousId` or a `userId`.'));
     });
 
-    it('should require an event', () => {
+    test('should require an event', () => {
       assert.throws(() => {
         analytics.track({ userId: 'id' });
       }, error('You must pass an `event`.'));
@@ -318,7 +321,7 @@ describe('Analytics', () => {
   });
 
   describe('#page', () => {
-    it('should enqueue a message', () => {
+    test('should enqueue a message', () => {
       const date = new Date();
       analytics.page({ userId: 'id', timestamp: date, messageId: id });
       assert.deepEqual(analytics.queue[0].message, {
@@ -330,13 +333,13 @@ describe('Analytics', () => {
       });
     });
 
-    it('should validate a message', () => {
+    test('should validate a message', () => {
       assert.throws(() => {
         analytics.page();
       }, error('You must pass a message object.'));
     });
 
-    it('should require a userId or anonymousId', () => {
+    test('should require a userId or anonymousId', () => {
       assert.throws(() => {
         analytics.page({});
       }, error('You must pass either an `anonymousId` or a `userId`.'));
@@ -344,7 +347,7 @@ describe('Analytics', () => {
   });
 
   describe('#screen', () => {
-    it('should enqueue a message', () => {
+    test('should enqueue a message', () => {
       const date = new Date();
       analytics.screen({ userId: 'id', timestamp: date, messageId: id });
       assert.deepEqual(analytics.queue[0].message, {
@@ -356,13 +359,13 @@ describe('Analytics', () => {
       });
     });
 
-    it('should validate a message', () => {
+    test('should validate a message', () => {
       assert.throws(() => {
         analytics.screen();
       }, error('You must pass a message object.'));
     });
 
-    it('should require a userId or anonymousId', () => {
+    test('should require a userId or anonymousId', () => {
       assert.throws(() => {
         analytics.screen({});
       }, error('You must pass either an `anonymousId` or a `userId`.'));
@@ -370,7 +373,7 @@ describe('Analytics', () => {
   });
 
   describe('#alias', () => {
-    it('should enqueue a message', () => {
+    test('should enqueue a message', () => {
       const date = new Date();
       analytics.alias({
         previousId: 'previous', userId: 'id', timestamp: date, messageId: id,
@@ -385,19 +388,19 @@ describe('Analytics', () => {
       });
     });
 
-    it('should validate a message', () => {
+    test('should validate a message', () => {
       assert.throws(() => {
         analytics.alias();
       }, error('You must pass a message object.'));
     });
 
-    it('should require a userId', () => {
+    test('should require a userId', () => {
       assert.throws(() => {
         analytics.alias({});
       }, error('You must pass a `userId`.'));
     });
 
-    it('should require a previousId', () => {
+    test('should require a previousId', () => {
       assert.throws(() => {
         analytics.alias({ userId: 'id' });
       }, error('You must pass a `previousId`.'));
