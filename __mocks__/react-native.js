@@ -1,1 +1,5 @@
-module.exports = { Platform: { OS: 'react-native' } };
+module.exports = {
+  Platform: {
+    OS: 'react-native',
+  },
+};
