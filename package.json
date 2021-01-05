@@ -32,7 +32,7 @@
     "url": "https://github.com/neiker/analytics-react-native/issues"
   },
   "dependencies": {
-    "axios": "0.19.0",
+    "axios": "0.21.1",
     "axios-retry": "3.1.2",
     "base-64": "0.1.0",
     "type-of": "2.0.1"
